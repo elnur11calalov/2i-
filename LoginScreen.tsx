@@ -1,0 +1,4 @@
+import { LogIn } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { useAuth } from '../../contexts/AuthContext'
+export default function LoginScreen() { const { login } = useAuth(); const handleLogin = async () => { try { await login() } catch { toast.error('Giriş alınmadı. Zəhmət olmasa yenidən cəhd edin.') } }; return <main className="grid min-h-screen place-items-center p-5"><section className="card w-full max-w-md text-center"><div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-green-100 text-3xl">✓</div><h1 className="text-2xl font-bold">Gündəlik İşlər</h1><p className="mt-2 text-slate-600 dark:text-slate-400">Gündəlik iki işinizi sadə şəkildə izləyin.</p><button onClick={handleLogin} className="btn mt-7 w-full bg-green-600 text-white hover:bg-green-700"><LogIn size={19} /> Google ilə daxil ol</button></section></main> }

@@ -1,0 +1,10 @@
+import { useState } from 'react'
+import { useAuth } from './contexts/AuthContext'
+import { useProfile } from './hooks/useProfile'
+import Loading from './components/common/Loading'
+import LoginScreen from './components/auth/LoginScreen'
+import ProfileSetup from './components/auth/ProfileSetup'
+import Header from './components/layout/Header'
+import HomePage from './components/home/HomePage'
+import FriendsPage from './components/friends/FriendsPage'
+export default function App() { const { user, loading } = useAuth(); const { profile, loading: profileLoading } = useProfile(user?.uid); const [page, setPage] = useState<'home' | 'friends'>('home'); if (loading || (user && profileLoading)) return <Loading />; if (!user) return <LoginScreen />; if (!profile) return <ProfileSetup user={user} />; return <main className="mx-auto min-h-screen max-w-2xl p-4 sm:p-6"><Header profile={profile} page={page} setPage={setPage} />{page === 'home' ? <HomePage profile={profile} /> : <FriendsPage profile={profile} onBack={() => setPage('home')} />}</main> }

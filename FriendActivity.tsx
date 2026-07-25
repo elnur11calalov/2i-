@@ -1,0 +1,8 @@
+import { useEffect, useState } from 'react'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { db } from '../../lib/firebase'
+import { useDailyLogs } from '../../hooks/useDailyLogs'
+import type { UserProfile } from '../../types'
+import { formatDate } from '../../utils/date'
+function Profile({ uid }: { uid: string }) { const [profile, setProfile] = useState<UserProfile>(); const { logs } = useDailyLogs(uid); useEffect(() => onSnapshot(doc(db, 'publicProfiles', uid), (snap) => setProfile(snap.data() as UserProfile)), [uid]); if (!profile) return null; return <article className="card"><div className="flex items-center gap-3"><img className="h-11 w-11 rounded-full" src={profile.photoURL ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.displayName)}`} /><div><h3 className="font-bold">{profile.displayName}</h3><p className="text-sm text-slate-500">@{profile.username}</p></div></div>{logs.length ? <div className="mt-4 space-y-3">{logs.slice(0, 7).map((log) => <div key={log.date} className="rounded-xl bg-slate-50 p-3 text-sm dark:bg-slate-800"><b>{formatDate(log.date)}</b><p className="mt-1">{log.task1 ? '✔' : '✖'} 1-ci İş</p><p>{log.task2 ? '✔' : '✖'} 2-ci İş</p></div>)}</div> : <p className="mt-4 text-sm text-slate-500">Hələ qeyd yoxdur.</p>}</article> }
+export default function FriendActivity({ ids }: { ids: string[] }) { if (!ids.length) return <section className="card text-center text-slate-500">Hələ dostunuz yoxdur. Yuxarıdan dost əlavə edin.</section>; return <section><h2 className="mb-3 font-bold">Dostlar</h2><div className="space-y-3">{ids.map((uid) => <Profile key={uid} uid={uid} />)}</div></section> }
